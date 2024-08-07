@@ -1,5 +1,14 @@
 import socket
 import json
+import streamlit as st
+
+def pid_list():
+    pid_dict = []
+    with open('./pid.json') as data:
+        pids = json.load(data)
+        for pid in pids:
+            pid_dict.append(pid)
+    return pid_dict
 
 class Command:
     def __init__(self, pid) -> None:
@@ -12,15 +21,19 @@ class Command:
         read_json = json.load(data)
         self.host = host
         self.port = port
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as ser:
+        ser = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            ser.settimeout(10)
             ser.connect((self.host, self.port))
-            try:
-                ser.sendall(bytes.fromhex(self.pid))
-                self.response = ser.recv(1024)
-                print(f"Resposta: {self.response}")
-                print(f"\nDescrição do comando: {read_json.get(self.pid)}")
-                socket.close()
-            except Exception as e:
-                print(f"Erro: {e}")
-                socket.close()
+            ser.sendall(bytes.fromhex(self.pid))
+            self.response = ser.recv(1024)
+            st.write(f"Resposta: {self.response}")
+            st.write(f"\nDescrição do comando: {read_json.get(self.pid)}")
+        except TimeoutError:
+            st.warning("Erro ao realizar a conexão com OBD.")
+        except Exception as e:
+            st.warning(f"Erro: {e}")
+        finally:
+            ser.close()
+                
         
