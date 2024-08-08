@@ -1,23 +1,20 @@
+from commands import Command
+from commands import Frontpage
 from commands import *
 import streamlit as st
 import json
+
+# Chamando webpage
+page = Frontpage()
+page.set_page()
 
 # Definindo host e porta
 host= '192.168.0.10'
 port = 35000
 
-
+# Coletar param
 data = open('./pid.json')
 pid_desc = json.load(data)
-
-# Criando a page
-st.set_page_config(
-    page_title="OBD Reader",
-    page_icon=":car:",
-)
-st.sidebar.empty()
-st.sidebar.title("OBD Reader")
-st.sidebar.write("Aplicativo para monitorar dados do veículo em tempo real")
 
 pid = st.sidebar.selectbox('Selecione o PID', [''] + pid_list())
 if pid == '':
@@ -26,6 +23,7 @@ else:
     st.sidebar.write(f"Descrição: {pid_desc[pid]}")
 
 command = Command(pid)  
-
 if st.sidebar.button("Conectar"):
     command.connection(host, port)
+    
+st.sidebar.info("Veja mais sobre OBD-2 e PID em: https://www.csselectronics.com/pages/obd2-pid-table-on-board-diagnostics-j1979")
