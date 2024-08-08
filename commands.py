@@ -23,6 +23,13 @@ class Frontpage:
         )
         # Barra lateral
         st.sidebar.empty()
+        st.markdown("""
+            <style>
+            [data-testid=stSidebar] {
+            background-color: #F5F5F5;
+            }
+        </style>
+        """, unsafe_allow_html=True)
         st.sidebar.title("Sobre")
         st.sidebar.write("Aplicativo para monitorar dados do veículo em tempo real")
         # Página principal
