@@ -3,12 +3,31 @@ import json
 import streamlit as st
 
 def pid_list():
+    '''Obter PID's e descrições'''
     pid_dict = []
     with open('./pid.json') as data:
         pids = json.load(data)
         for pid in pids:
             pid_dict.append(pid)
     return pid_dict
+
+class Frontpage:
+    def __init__(self) -> None:
+        pass
+    
+    def set_page(self):
+        '''Criando o front'''
+        st.set_page_config(
+        page_title="OBD Reader",
+        page_icon=":car:",
+        )
+        # Barra lateral
+        st.sidebar.empty()
+        st.sidebar.title("Sobre")
+        st.sidebar.write("Aplicativo para monitorar dados do veículo em tempo real")
+        # Página principal
+        st.title("OBD Reader")
+        st.subheader("Dados do veículo em tempo real")
 
 class Command:
     def __init__(self, pid) -> None:
