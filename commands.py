@@ -1,6 +1,8 @@
 import socket
 import json
 import streamlit as st
+import time
+import random
 
 def pid_list():
     '''Obter PID's e descrições'''
@@ -36,7 +38,7 @@ class Frontpage:
         st.title("OBD Reader")
         st.subheader("Dados do veículo em tempo real")
 
-class Command:
+class ObdPid:
     def __init__(self, pid) -> None:
         '''Inicializa a classe PID Command - pid = 0100 (comando PID)'''
         self.pid = pid
@@ -61,5 +63,17 @@ class Command:
             st.warning(f"Erro: {e}")
         finally:
             ser.close()
-                
+
+    def hex_list(self):
+        '''Gera uma lista de números hexadecimais de 1 a 100'''
+        values = []
+        count = 1
+        while count <= 100:
+            values.append(hex(count))
+            count += 1
+        return values
+    
+    #def obd_test(self):
+        
+
         

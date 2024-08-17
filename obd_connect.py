@@ -1,4 +1,4 @@
-from commands import Command
+from commands import ObdPid
 from commands import Frontpage
 from commands import *
 import streamlit as st
@@ -22,8 +22,8 @@ if pid == '':
 else:
     st.sidebar.write(f"Descrição: {pid_desc[pid]}")
 
-command = Command(pid)  
+pid = ObdPid(pid)  
 if st.sidebar.button("Conectar"):
-    command.connection(host, port)
+    pid.connection(host, port)
     
 st.sidebar.info("Veja mais sobre OBD-2 e PID em: https://www.csselectronics.com/pages/obd2-pid-table-on-board-diagnostics-j1979")
