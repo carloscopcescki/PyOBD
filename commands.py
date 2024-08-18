@@ -4,47 +4,13 @@ import streamlit as st
 import time
 import random
 
-def pid_list():
-    '''Obter PID's e descrições'''
-    pid_dict = []
-    with open('./pid.json') as data:
-        pids = json.load(data)
-        for pid in pids:
-            pid_dict.append(pid)
-    return pid_dict
-
-class Frontpage:
-    def __init__(self) -> None:
-        pass
-    
-    def set_page(self):
-        '''Criando o front'''
-        st.set_page_config(
-        page_title="OBD Reader",
-        page_icon=":car:",
-        )
-        # Barra lateral
-        st.sidebar.empty()
-        st.markdown("""
-            <style>
-            [data-testid=stSidebar] {
-            background-color: #F5F5F5;
-            }
-        </style>
-        """, unsafe_allow_html=True)
-        st.sidebar.title("Sobre")
-        st.sidebar.write("Aplicativo para monitorar dados do veículo em tempo real")
-        # Página principal
-        st.title("OBD Reader")
-        st.subheader("Dados do veículo em tempo real")
-
 class ObdPid:
     def __init__(self, pid) -> None:
-        '''Inicializa a classe PID Command - pid = 0100 (comando PID)'''
+        '''Inicialize OBD connection'''
         self.pid = pid
     
     def connection(self, host, port):
-        '''Estabelece a conexão com o OBD Scanner'''
+        '''Create connection with OBD scanner'''
         data = open('./pid.json')
         read_json = json.load(data)
         self.host = host
@@ -65,15 +31,57 @@ class ObdPid:
             ser.close()
 
     def hex_list(self):
-        '''Gera uma lista de números hexadecimais de 1 a 100'''
+        '''Generate Hex List'''
         values = []
         count = 1
         while count <= 100:
             values.append(hex(count))
             count += 1
         return values
+
+    def scanner_test(self, pid_number, description):
+        '''OBD scanner test'''
+        self.pid_number = pid_number
+        self.description = description
+        st.write(f"PID selecionado: {self.pid_number}")
+        st.write(f"Descrição: {self.description}")
+        pid_response = random.choice(ObdPid.hex_list(self))
+        st.write(f'Resposta: {int(pid_response, 16)}')
+
+class Page():
+    def __init__(self) -> None:
+        '''Create web interface'''
+        pass
     
-    #def obd_test(self):
+    def set_page(self):
+        '''Customize webpage'''
+        st.set_page_config(
+        page_title="OBD Reader",
+        page_icon=":car:",
+        )
+        st.sidebar.empty()
+        st.markdown("""
+            <style>
+            [data-testid=stSidebar] {
+            background-color: #F5F5F5;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+        st.sidebar.title("Sobre")
+        st.sidebar.write("Aplicativo para monitorar dados do veículo em tempo real")
+        st.title("OBD Reader")
+        st.subheader("Dados do veículo em tempo real")
+        
+    def pid_list(self):
+        '''Extract PID list for json file'''
+        pid_dict = []
+        with open('./pid.json') as data:
+            pids = json.load(data)
+            for pid in pids:
+                pid_dict.append(pid)
+        return pid_dict
+    
+    
         
 
         
