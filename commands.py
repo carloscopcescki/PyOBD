@@ -1,6 +1,7 @@
 import socket
 import json
 import streamlit as st
+from time import time
 import time
 import random
 
@@ -43,11 +44,19 @@ class ObdPid:
         '''OBD scanner test'''
         self.pid_number = pid_number
         self.description = description
+        now = time.time()
+        time_loop = 30
+        stop = st.sidebar.button("Parar")
         st.write(f"PID selecionado: {self.pid_number}")
         st.write(f"Descrição: {self.description}")
-        pid_response = random.choice(ObdPid.hex_list(self))
-        st.write(f'Resposta: {int(pid_response, 16)}')
-
+        
+        while(time.time() - now < time_loop):
+            pid_response = random.choice(ObdPid.hex_list(self))
+            st.write(f'Resposta: {int(pid_response, 16)} Km/h')
+            time.sleep(1)
+            if stop:
+                break
+        
 class Page():
     def __init__(self) -> None:
         '''Create web interface'''
@@ -60,16 +69,10 @@ class Page():
         page_icon=":car:",
         )
         st.sidebar.empty()
-        st.markdown("""
-            <style>
-            [data-testid=stSidebar] {
-            background-color: #F5F5F5;
-            }
-        </style>
-        """, unsafe_allow_html=True)
-        st.sidebar.title("Sobre")
+        st.sidebar.title("OBD Reader")
         st.sidebar.write("Aplicativo para monitorar dados do veículo em tempo real")
-        st.title("OBD Reader")
+        st.sidebar.divider()
+        
         st.subheader("Dados do veículo em tempo real")
         
     def pid_list(self):
